@@ -10,9 +10,4 @@ public class BlackjackBackendApplication {
 		SpringApplication.run(BlackjackBackendApplication.class, args);
 	}
 
-	public void test() {
-		System.out.println("Your mom");
-	}
-
-
 }
