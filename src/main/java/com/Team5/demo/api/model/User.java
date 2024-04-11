@@ -1,11 +1,24 @@
 package com.Team5.demo.api.model;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
-public class User  {
+@Entity
+public class User {
 
+    @Id
+    @Column(name = "Username")
     private String userName;
+    @Column(name = "Password")
     private String passWrd;
+    @Column(name = "Email")
     private String email;
+    @Column(name = "Available_Tokens")
     private int availableTokens;
+
+    public User() {
+
+    }
 
     public User(String userName, String passWrd, String email, int availableTokens) {
         this.userName = userName;
