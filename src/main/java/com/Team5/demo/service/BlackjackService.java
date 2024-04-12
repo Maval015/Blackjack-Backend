@@ -3,6 +3,8 @@ package com.Team5.demo.service;
 import com.Team5.demo.api.model.Deck;
 import com.Team5.demo.api.model.Hand;
 import com.Team5.demo.api.model.Player;
+import com.Team5.demo.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +12,9 @@ import java.util.List;
 
 @Service
 public class BlackjackService {
+
+    @Autowired
+    private UserRepository userRepository;
     private final Deck deck;
     private final Player player;
     private final Player dealer;
@@ -41,6 +46,33 @@ public class BlackjackService {
 
     }
 
+    public void playerHits() {
+        player.getHand().addCard(deck.drawCard());
+    }
+
+    public void dealerHits() {
+        dealer.getHand().addCard(deck.drawCard());
+    }
+
+    public int determineWinner() {
+        if (isBust(getPlayerScore())) {
+            return -1;
+        }
+
+        else if (isBust((getDealerScore()))) {
+            return 1;
+        }
+
+        else {
+            if (getPlayerScore() > getDealerScore())
+                return 1;
+            else if (getPlayerScore() < getDealerScore())
+                return -1;
+            else
+                return 0;
+        }
+    }
+
     public boolean isBust(int playerHand) {
         return player.getHand().getValue() > 21;
     }
@@ -49,17 +81,16 @@ public class BlackjackService {
         return player.getHand().getValue() == 21;
     }
 
-    public boolean isBustDealer(Player dealer) {
+    public boolean DealerisBust(int playerHand) {
         return dealer.getHand().getValue() > 21;
     }
 
-    public boolean hasBlackjackDealer(Player dealer) {
+    public boolean DealerhasBlackjack(int playerHand) {
         return dealer.getHand().getValue() == 21;
     }
 
-    public boolean shouldDealerHit(Player dealer) {
-        // Dealer should hit if their hand value is less than 17
-        return dealer.getHand().getValue() < 17;
+    public boolean shouldDealerHit(int playerHand) {
+        return dealer.getHand().getValue() < 17; // Dealer should hit if their hand value is less than 17
     }
 
     public int getPlayerScore() {
@@ -77,8 +108,6 @@ public class BlackjackService {
     public Hand getDealerHand() {
         return dealer.getHand();
     }
-
-
 
     // Additional methods for gameplay (hit, stand, etc.) would go here
 }
