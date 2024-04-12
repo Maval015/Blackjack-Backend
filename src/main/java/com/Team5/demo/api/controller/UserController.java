@@ -35,6 +35,7 @@ public class UserController {
         userService.createAccount(request.getUserName(), request.getPassWrd(), request.getEmail());
         return "Account created succesfully!";
     }
+
 }
 
 /**
