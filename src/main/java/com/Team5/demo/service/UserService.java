@@ -39,6 +39,10 @@ public class UserService {
         User newUser = new User(userName, passWrd, email, 0);
         userRepository.save(newUser);
     }
+
+    public User findByUsername(String userName) {
+        return userRepository.findByUserName(userName);
+    }
 }
 
 

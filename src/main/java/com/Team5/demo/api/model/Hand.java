@@ -14,6 +14,10 @@ public class Hand {
         cards.add(card);
     }
 
+    public void clear() {
+        cards.clear();
+    }
+
     public int getValue() {
         int value = 0;
         int numAces = 0;
