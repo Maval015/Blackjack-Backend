@@ -25,6 +25,20 @@ public class UserService {
             return null; // Return null if login fails
         }
     }
+
+    public void createAccount(String userName, String passWrd, String email) {
+
+        if (userRepository.findByUserName(userName) != null) {
+            throw new IllegalArgumentException("Username Already exists");
+        }
+
+        if (userRepository.findByEmail(email) != null) {
+            throw new IllegalArgumentException("Email is already linked to existing account!");
+        }
+
+        User newUser = new User(userName, passWrd, email, 0);
+        userRepository.save(newUser);
+    }
 }
 
 

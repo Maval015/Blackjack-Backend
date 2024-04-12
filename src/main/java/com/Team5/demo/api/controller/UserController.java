@@ -1,5 +1,6 @@
 package com.Team5.demo.api.controller;
 
+import com.Team5.demo.api.model.CreateUserRequest;
 import com.Team5.demo.api.model.User;
 import com.Team5.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,13 @@ public class UserController {
         else {
             return "Login Failed! Invalid Username or Password!";
         }
+    }
+
+    @PostMapping("/createAccount")
+    public String createAccount(@RequestBody CreateUserRequest request) {
+
+        userService.createAccount(request.getUserName(), request.getPassWrd(), request.getEmail());
+        return "Account created succesfully!";
     }
 }
 
