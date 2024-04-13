@@ -47,6 +47,18 @@ public class Hand {
         return value;
     }
 
+    public String getHandString() {
+        StringBuilder sb = new StringBuilder();
+        for (Card card : cards) {
+            sb.append(card.getRank()).append(" of ").append(card.getSuit()).append(", ");
+        }
+        // Remove the trailing comma and space
+        if (!cards.isEmpty()) {
+            sb.setLength(sb.length() - 2);
+        }
+        return sb.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
