@@ -23,6 +23,16 @@ public class GameController {
         int betAmount = request.getBetAmount();
         GameResponse response;
 
+        User user = userService.findByUsername(userName);
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found!");
+        }
+
+        if (betAmount <= 0 || betAmount > user.getAvailableTokens()) {
+            throw new ArithmeticException("Invalid bet amount. Bet must be greater than 0, but not more than your available tokens.");
+        }
+
         if (blackjackService.isGameOngoing()) {
             throw new IllegalStateException("Game is already running!"); //Check exception handling in GameControllerAdvice Class
         }
@@ -36,13 +46,6 @@ public class GameController {
         // Check if either player or dealer has Blackjack
         boolean playerHasBlackjack = blackjackService.hasBlackjack(playerScore);
         boolean dealerHasBlackjack = blackjackService.DealerhasBlackjack(dealerScore);
-
-        User user = userService.findByUsername(userName);
-
-        if (user == null) {
-            throw new NoSuchElementException("User not found!");
-        }
-
 
         if (playerHasBlackjack && dealerHasBlackjack) {
             blackjackService.resetGame();
@@ -66,9 +69,19 @@ public class GameController {
         int betAmount = request.getBetAmount();
         GameResponse response;
 
+        User user = userService.findByUsername(userName);
+
         // Check if the game is ongoing
         if (!blackjackService.isGameOngoing()) {
             throw new IllegalStateException("Game is not currently in progress. Start a new game.");
+        }
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found!");
+        }
+
+        if (betAmount <= 0 || betAmount > user.getAvailableTokens()) {
+            throw new ArithmeticException("Invalid bet amount. Bet must be greater than 0, but not more than your available tokens.");
         }
 
         blackjackService.playerHits(); // Call the hit method in the BlackjackService
@@ -76,35 +89,28 @@ public class GameController {
         int dealerScore = blackjackService.getDealerScore();
         response = new GameResponse(blackjackService.getPlayerHand().getHandString(), playerScore, blackjackService.getDealerHand().getHandString(), dealerScore, "");
 
+        // Update tokens for player losing the game
         if (blackjackService.isBust(playerScore)) {
-            User user = userService.findByUsername(userName); // Update tokens for player losing the game
 
-            if (user != null) {
-                blackjackService.updateTokens(user, betAmount, -1);
-            }
-            else {
-                    throw new NoSuchElementException("User not found!");
-            }
-
-
+            blackjackService.updateTokens(user, betAmount, -1);
             blackjackService.resetGame(); // Reset game state
             response.setGameOutcome("PLAYER_LOST");
             return response;
         }
 
+        //Update tokens for player winning
         else if (blackjackService.hasBlackjack(playerScore)) {
-            User user = userService.findByUsername(userName); // Update tokens for player losing the game
 
-            if (user != null) {
-                blackjackService.updateTokens(user, betAmount, 1);
-            }
-            else {
-                throw new NoSuchElementException("User not found!");
-            }
-
-
+            blackjackService.updateTokens(user, betAmount, 1);
             blackjackService.resetGame();// Reset game state
             response.setGameOutcome("PLAYER_WON");
+            return response;
+        }
+
+        //Determines a tie.
+        else if (blackjackService.hasBlackjack(playerScore) && blackjackService.DealerhasBlackjack(dealerScore)) {
+            blackjackService.resetGame();
+            response.setGameOutcome("TIE");
             return response;
         }
 
@@ -117,9 +123,19 @@ public class GameController {
         int betAmount = request.getBetAmount();
         GameResponse response;
 
+        User user = userService.findByUsername(userName);
+
         // Check if the game is ongoing
         if (!blackjackService.isGameOngoing()) {
             throw new IllegalStateException("Game is not currently in progress. Start a new game.");
+        }
+
+        if (user == null) {
+            throw new NoSuchElementException("User not found!");
+        }
+
+        if (betAmount <= 0 || betAmount > user.getAvailableTokens()) {
+            throw new ArithmeticException("Invalid bet amount. Bet must be greater than 0, but not more than your available tokens.");
         }
 
         int dealerScore = blackjackService.getDealerScore();
@@ -127,41 +143,25 @@ public class GameController {
 
         // Dealer's turn
         while (blackjackService.shouldDealerHit(dealerScore)) {
-
             blackjackService.dealerHits();
             dealerScore = blackjackService.getDealerScore();
             response.setDealerHand(blackjackService.getDealerHand().getHandString());
             response.setDealerScore(dealerScore);
+        }
 
-            if (blackjackService.DealerisBust(dealerScore)) {
+        if (blackjackService.DealerisBust(dealerScore) || dealerScore < blackjackService.getPlayerScore()) {
                 blackjackService.resetGame();
                 response.setGameOutcome("PLAYER_WON");
                 return response;
-            }
-            return response;
+        }
+        if (blackjackService.DealerhasBlackjack(dealerScore) || dealerScore > blackjackService.getPlayerScore()) {
+                blackjackService.resetGame();
+                response.setGameOutcome("PLAYER_LOST");
+                return response;
         }
 
-        int winner = blackjackService.determineWinner(); // Check the outcome of the game
-        User user = userService.findByUsername(userName);
-
-        if (user != null) {
-            blackjackService.updateTokens(user, betAmount, winner);
-        }
         else {
-            throw new NoSuchElementException("User not found!");
-        }
-
-        blackjackService.resetGame();
-
-        if (winner == 1) {
-            response.setGameOutcome("PLAYER_WON");
-            return response;
-        }
-        else if (winner == -1) {
-            response.setGameOutcome("PLAYER_WON");
-            return response;
-        }
-        else {
+            blackjackService.resetGame();
             response.setGameOutcome("TIE");
             return response;
         }

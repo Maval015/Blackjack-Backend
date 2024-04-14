@@ -121,6 +121,9 @@ public class BlackjackService {
     }
 
     public boolean shouldDealerHit(int playerHand) {
+        if (dealer.getHand().getValue() < player.getHand().getValue()) {
+            return true;
+        }
         return dealer.getHand().getValue() < 17; // Dealer should hit if their hand value is less than 17
     }
 
