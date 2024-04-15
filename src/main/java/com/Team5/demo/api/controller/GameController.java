@@ -7,6 +7,9 @@ import com.Team5.demo.service.BlackjackService;
 import com.Team5.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -23,6 +26,7 @@ public class GameController {
         String username = request.getUsername();
         int betAmount = request.getBetAmount();
         GameResponse response;
+        System.out.println(username);
 
         User user = userService.findByUsername(username);
 
@@ -119,10 +123,10 @@ public class GameController {
     }
 
     @PostMapping("/stand")
-    public GameResponse stand(@RequestBody PlayGameRequest request) {
+    public List<GameResponse> stand(@RequestBody PlayGameRequest request) {
         String username = request.getUsername();
         int betAmount = request.getBetAmount();
-        GameResponse response;
+        List<GameResponse> responses = new ArrayList<>();
 
         User user = userService.findByUsername(username);
 
@@ -140,7 +144,7 @@ public class GameController {
         }
 
         int dealerScore = blackjackService.getDealerScore();
-        response = new GameResponse(blackjackService.getPlayerHand().getHandString(), blackjackService.getPlayerScore(), blackjackService.getDealerHand().getHandString(), dealerScore, "");
+        GameResponse response = new GameResponse(blackjackService.getPlayerHand().getHandString(), blackjackService.getPlayerScore(), blackjackService.getDealerHand().getHandString(), dealerScore, "");
 
         // Dealer's turn
         while (blackjackService.shouldDealerHit(dealerScore)) {
@@ -148,23 +152,25 @@ public class GameController {
             dealerScore = blackjackService.getDealerScore();
             response.setDealerHand(blackjackService.getDealerHand().getHandString());
             response.setDealerScore(dealerScore);
+            responses.add(response);
+            response = new GameResponse(blackjackService.getPlayerHand().getHandString(), blackjackService.getPlayerScore(), blackjackService.getDealerHand().getHandString(), dealerScore, "");
         }
 
+        // Final response after dealer's turn
         if (blackjackService.DealerisBust(dealerScore) || dealerScore < blackjackService.getPlayerScore()) {
-                blackjackService.resetGame();
-                response.setGameOutcome("PLAYER_WON");
-                return response;
-        }
-        if (blackjackService.DealerhasBlackjack(dealerScore) || dealerScore > blackjackService.getPlayerScore()) {
-                blackjackService.resetGame();
-                response.setGameOutcome("PLAYER_LOST");
-                return response;
-        }
-
-        else {
+            blackjackService.resetGame();
+            response.setGameOutcome("PLAYER_WON");
+            responses.add(response);
+        } else if (blackjackService.DealerhasBlackjack(dealerScore) || dealerScore > blackjackService.getPlayerScore()) {
+            blackjackService.resetGame();
+            response.setGameOutcome("PLAYER_LOST");
+            responses.add(response);
+        } else {
             blackjackService.resetGame();
             response.setGameOutcome("TIE");
-            return response;
+            responses.add(response);
         }
+
+        return responses;
     }
 }
