@@ -8,9 +8,9 @@ public class User {
 
     @Id
     @Column(name = "Username")
-    private String userName;
+    private String username;
     @Column(name = "Password")
-    private String passWrd;
+    private String password;
     @Column(name = "Email")
     private String email;
     @Column(name = "Available_Tokens")
@@ -20,27 +20,27 @@ public class User {
 
     }
 
-    public User(String userName, String passWrd, String email, int availableTokens) {
-        this.userName = userName;
-        this.passWrd = passWrd;
+    public User(String username, String password, String email, int availableTokens) {
+        this.username = username;
+        this.password = password;
         this.email = email;
         this.availableTokens = availableTokens;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPassWrd() {
-        return passWrd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWrd(String passWrd) {
-        this.passWrd = passWrd;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {

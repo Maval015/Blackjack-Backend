@@ -12,12 +12,12 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User login(String userName, String password) {
+    public User login(String username, String password) {
 
-        User user = userRepository.findByUserName(userName); // Retrieve the user from the database based on the username
+        User user = userRepository.findByUsername(username); // Retrieve the user from the database based on the username
 
 
-        if (user != null && user.getPassWrd().equals(password)) { // Check if the user exists and if the provided password matches
+        if (user != null && user.getPassword().equals(password)) { // Check if the user exists and if the provided password matches
             return user; // Return the user if login is successful
         }
 
@@ -26,9 +26,9 @@ public class UserService {
         }
     }
 
-    public void createAccount(String userName, String passWrd, String email) {
+    public void createAccount(String username, String password, String email) {
 
-        if (userRepository.findByUserName(userName) != null) {
+        if (userRepository.findByUsername(username) != null) {
             throw new IllegalArgumentException("Username Already exists");
         }
 
@@ -36,12 +36,12 @@ public class UserService {
             throw new IllegalArgumentException("Email is already linked to existing account!");
         }
 
-        User newUser = new User(userName, passWrd, email, 0);
+        User newUser = new User(username, password, email, 0);
         userRepository.save(newUser);
     }
 
-    public User findByUsername(String userName) {
-        return userRepository.findByUserName(userName);
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
 
