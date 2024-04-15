@@ -2,15 +2,15 @@ package com.Team5.demo.api.model;
 
 public class PlayGameRequest {
 
-    private String userName;
+    private String username;
     private int betAmount;
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public int getBetAmount() {
@@ -21,8 +21,8 @@ public class PlayGameRequest {
         this.betAmount = betAmount;
     }
 
-    public PlayGameRequest(String userName, int betAmount) {
-        this.userName = userName;
+    public PlayGameRequest(String username, int betAmount) {
+        this.username = username;
         this.betAmount = betAmount;
     }
 }

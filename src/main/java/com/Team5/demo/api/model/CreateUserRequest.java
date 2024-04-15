@@ -2,24 +2,24 @@ package com.Team5.demo.api.model;
 
 public class CreateUserRequest {
 
-    private String userName;
-    private String passWrd;
+    private String username;
+    private String password;
     private String email;
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPassWrd() {
-        return passWrd;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPassWrd(String passWrd) {
-        this.passWrd = passWrd;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getEmail() {

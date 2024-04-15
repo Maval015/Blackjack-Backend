@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.NoSuchElementException;
 
 @RestController
+@RequestMapping("/api")
 public class GameController {
 
     @Autowired
@@ -19,11 +20,11 @@ public class GameController {
 
     @PostMapping("/playGame")
     public GameResponse playGame(@RequestBody PlayGameRequest request) {
-        String userName = request.getUserName();
+        String username = request.getUsername();
         int betAmount = request.getBetAmount();
         GameResponse response;
 
-        User user = userService.findByUsername(userName);
+        User user = userService.findByUsername(username);
 
         if (user == null) {
             throw new NoSuchElementException("User not found!");
@@ -65,11 +66,11 @@ public class GameController {
 
     @PostMapping("/hit")
     public GameResponse hit(@RequestBody PlayGameRequest request) {
-        String userName = request.getUserName();
+        String username = request.getUsername();
         int betAmount = request.getBetAmount();
         GameResponse response;
 
-        User user = userService.findByUsername(userName);
+        User user = userService.findByUsername(username);
 
         // Check if the game is ongoing
         if (!blackjackService.isGameOngoing()) {
@@ -119,11 +120,11 @@ public class GameController {
 
     @PostMapping("/stand")
     public GameResponse stand(@RequestBody PlayGameRequest request) {
-        String userName = request.getUserName();
+        String username = request.getUsername();
         int betAmount = request.getBetAmount();
         GameResponse response;
 
-        User user = userService.findByUsername(userName);
+        User user = userService.findByUsername(username);
 
         // Check if the game is ongoing
         if (!blackjackService.isGameOngoing()) {
