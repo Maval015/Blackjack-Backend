@@ -7,7 +7,6 @@ import com.Team5.demo.service.BlackjackService;
 import com.Team5.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -26,7 +25,6 @@ public class GameController {
         String username = request.getUsername();
         int betAmount = request.getBetAmount();
         GameResponse response;
-        System.out.println(username);
 
         User user = userService.findByUsername(username);
 
