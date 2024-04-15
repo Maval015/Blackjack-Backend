@@ -34,10 +34,10 @@ public class UserController {
     }
 
     @PostMapping("/createAccount")
-    public String createAccount(@RequestBody CreateUserRequest request) {
+    public ResponseEntity<String> createAccount(@RequestBody CreateUserRequest request) {
 
-        userService.createAccount(request.getUserName(), request.getPassWrd(), request.getEmail());
-        return "Account created succesfully!";
+        userService.createAccount(request.getUsername(), request.getPassword(), request.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully Created Account!");
     }
 
 }

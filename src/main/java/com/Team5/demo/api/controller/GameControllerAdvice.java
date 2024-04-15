@@ -24,4 +24,9 @@ public class GameControllerAdvice {
     public ResponseEntity<String> handleArithmeticException(ArithmeticException e) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
+    @ExceptionHandler
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.status((HttpStatus.I_AM_A_TEAPOT)).body(e.getMessage());
+    }
 }

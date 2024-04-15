@@ -36,7 +36,7 @@ public class UserService {
             throw new IllegalArgumentException("Email is already linked to existing account!");
         }
 
-        User newUser = new User(username, password, email, 0);
+        User newUser = new User(username, password, email, 1000);
         userRepository.save(newUser);
     }
 
