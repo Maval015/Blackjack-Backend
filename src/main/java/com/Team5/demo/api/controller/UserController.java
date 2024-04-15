@@ -40,6 +40,19 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Successfully Created Account!");
     }
 
+    @PostMapping("/user-tokens")
+    public ResponseEntity<Integer> fetchUserTokens(@RequestBody User loginUser) {
+        String username = loginUser.getUsername();
+        User user = userService.findByUsername(username);
+
+        if (user == null) {
+            throw new NoSuchElementException("User not Found!");
+        }
+
+        int availableTokens = user.getAvailableTokens();
+        return ResponseEntity.status(HttpStatus.OK).body(availableTokens);
+    }
+
 }
 
 /**
